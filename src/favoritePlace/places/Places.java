@@ -19,13 +19,20 @@ public class Places {
   public Places() {
   }
 
+  @Override
+  public String toString() {
+    return "lugar= " + this.place + "\n" +
+            "total de avaliações= " + assessmentTotal() + "\n" +
+            "media das avaliações= " + assessmentMedia() + "\n" +
+            "status das avaliações= " + statusAssessment();
+  }
+
   public String getPlace() {
     return place;
   }
 
-  public String setPlace(String place) {
-    this.place = place.toUpperCase();
-    return place;
+  public void setPlace(String place) {
+    this.place = place;
   }
 
   public List<Integer> getAssessment() {
@@ -44,6 +51,9 @@ public class Places {
   }
 
   public void assessmentPlace(int assessment) {
+    if (assessment < 0 || assessment > 10) {
+      throw new RuntimeException("Avaliação deve ser entre 0 e 10");
+    }
     this.assessment.add(assessment);
   }
 
@@ -51,13 +61,29 @@ public class Places {
     return this.assessment.size();
   }
 
-  public double assessmentMedia() {
+  private double sumAssessment() {
     double total = 0;
     for (int i = 0; i < this.assessment.size(); i++) {
       total += this.assessment.get(i);
     }
-    System.out.println(total / this.assessment.size());
-    return total / this.assessment.size();
+    return total;
+  }
+
+  public double assessmentMedia() {
+    return sumAssessment() / assessmentTotal();
+  }
+
+  public String statusAssessment() {
+    double media = assessmentMedia();
+    if (media >= 8) {
+      return "Exelente";
+    } else if (media >= 5) {
+      return "Bom";
+    } else if (media >= 3) {
+      return "Regular";
+    } else {
+      return "Ruim";
+    }
 
   }
 
